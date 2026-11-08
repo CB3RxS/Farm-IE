@@ -18,5 +18,13 @@ public class TestRun {
 
         Plant p = s.createPlant();
         System.out.println("Grew a " + p.getName() + " worth " + p.getSellPrice());
+
+        Player pl = new Player();
+        try {
+            pl.spendGold(30);
+            System.out.println("This line SHOULD NOT print.");
+        } catch (InsufficientFundsException e){
+            System.out.println("Gold is still " + pl.getGold());
+        }
     }
 }
