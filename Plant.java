@@ -8,18 +8,18 @@ public abstract class Plant implements Sellable {
         this.rarity = rarity;
         this.baseValue = baseValue;
     }
-        @Override 
-        public String getName() {
-            return name;
-        }
+    @Override 
+    public String getName() {
+        return name;
+    }
 
-        public Rarity getRarity() {
-            return rarity;
-        }
+    public Rarity getRarity() {
+        return rarity;
+    }
 
-        public int getBaseValue() {
-            return baseValue;
-        }
+    public int getBaseValue() {
+        return baseValue;
+    }
 
     @Override 
     public int getSellPrice() {
