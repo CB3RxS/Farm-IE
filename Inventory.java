@@ -1,140 +1,117 @@
-import java.util.*;
+
+import java.util.Scanner;
 
 public class Inventory {
 
-    private final List<Seed> seeds;
-    private final List<Plant> plants;
+    public void openInventory(Scanner scanner, InventoryData inventory) {
+        boolean viewing = true;
 
-    public Inventory() {
-        seeds = new ArrayList<>();
-        plants = new ArrayList<>();
-    }
+        while (viewing) {
+            System.out.println("\n==================================================");
+            System.out.println("                  PLAYER INVENTORY                ");
+            System.out.println("==================================================");
+            System.out.println("[1] Seeds");
+            System.out.println("[2] Harvested Plants");
+            System.out.println("[3] Items / Fertilizers");
+            System.out.println("[4] Return to Main Menu");
+            System.out.print("\nSelect a category: ");
 
-    // SEED MANAGEMENT
+            String choice = scanner.nextLine().trim();
 
-    public void addSeed(Seed seed) {
-        if (seed != null) {
-            seeds.add(seed);
-        }
-    }
+            switch (choice) {
+                case "1":
+                    displaySeeds(scanner, inventory);
+                    break;
 
-    public Seed takeSeed(String seedName) {
-        for (int i = 0; i < seeds.size(); i++) {
-            if (seeds.get(i).getName().equalsIgnoreCase(seedName)) {
-                return seeds.remove(i);
+                case "2":
+                    displayPlants(scanner, inventory);
+                    break;
+
+                case "3":
+                    displayItems(scanner, inventory);
+                    break;
+
+                case "4":
+                    viewing = false;
+                    System.out.println("\nReturning to Main Menu...");
+                    break;
+
+                default:
+                    System.out.println("Invalid selection. Please try again.");
             }
         }
-
-        return null;
     }
 
-    public int getSeedCount() {
-        return seeds.size();
+    private void displaySeeds(Scanner scanner, InventoryData inventory) {
+        System.out.println("\n---------------- SEED INVENTORY ----------------");
+        System.out.printf("%-22s %10s%n", "Seed", "Quantity");
+        System.out.println("-------------------------------------------------");
+
+        System.out.printf("%-22s %10d%n",
+                "Basic Seed", inventory.getSeedCount("Basic Seed"));
+
+        System.out.printf("%-22s %10d%n",
+                "Silver Seed", inventory.getSeedCount("Silver Seed"));
+
+        System.out.printf("%-22s %10d%n",
+                "Golden Seed", inventory.getSeedCount("Golden Seed"));
+
+        System.out.println("-------------------------------------------------");
+        System.out.println("Total Seeds: " + inventory.getSeedCount());
+
+        waitForReturn(scanner);
     }
 
-    public int getSeedCount(String seedName) {
-        int count = 0;
+    private void displayPlants(Scanner scanner, InventoryData inventory) {
+        System.out.println("\n---------------- HARVESTED PLANTS ----------------");
 
-        for (Seed seed : seeds) {
-            if (seed.getName().equalsIgnoreCase(seedName)) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
-    public List<Seed> getSeeds() {
-        return Collections.unmodifiableList(seeds);
-    }
-
-    // PLANT MANAGEMENT
-
-    public void addPlant(Plant plant) {
-        if (plant != null) {
-            plants.add(plant);
-        }
-    }
-
-    public Plant removePlant(int index) {
-        if (index < 0 || index >= plants.size()) {
-            return null;
-        }
-
-        return plants.remove(index);
-    }
-
-    public int getPlantCount() {
-        return plants.size();
-    }
-
-    public List<Plant> getPlants() {
-        return Collections.unmodifiableList(plants);
-    }
-
-    // INVENTORY DISPLAY
-
-    public void displayInventory() {
-
-        System.out.println("\n==================================================");
-        System.out.println("                  PLAYER INVENTORY                ");
-        System.out.println("==================================================");
-
-        // DISPLAY SEEDS
-
-        System.out.println("\n[1] SEEDS");
-        System.out.println("-----------------------------------------------");
-
-        if (seeds.isEmpty()) {
-            System.out.println("No seeds available.");
+        if (inventory.getPlants().isEmpty()) {
+            System.out.println("You have no harvested plants.");
         } else {
+            System.out.printf("%-4s %-19s %-12s %-12s %10s%n",
+                    "No.", "Plant", "Category", "Rarity", "Sell Price");
 
-            System.out.printf("%-20s %10s%n", "Seed Type", "Quantity");
-            System.out.println("-----------------------------------------------");
+            System.out.println("---------------------------------------------------------------------");
 
-            System.out.printf("%-20s %10d%n",
-                    "Basic Seed", getSeedCount("Basic Seed"));
+            for (int i = 0; i < inventory.getPlants().size(); i++) {
+                Plant plant = inventory.getPlants().get(i);
 
-            System.out.printf("%-20s %10d%n",
-                    "Silver Seed", getSeedCount("Silver Seed"));
-
-            System.out.printf("%-20s %10d%n",
-                    "Golden Seed", getSeedCount("Golden Seed"));
-
-            System.out.println("-----------------------------------------------");
-            System.out.println("Total Seeds: " + getSeedCount());
-        }
-
-        // DISPLAY HARVESTED PLANTS
-
-        System.out.println("\n[2] HARVESTED PLANTS");
-        System.out.println("-----------------------------------------------");
-
-        if (plants.isEmpty()) {
-            System.out.println("No harvested plants available.");
-        } else {
-
-            System.out.printf("%-5s %-18s %-12s %-12s %10s%n",
-                    "No.", "Plant Name", "Type", "Rarity", "Sell Price");
-
-            System.out.println("------------------------------------------------------------------");
-
-            for (int i = 0; i < plants.size(); i++) {
-
-                Plant plant = plants.get(i);
-
-                System.out.printf("%-5d %-18s %-12s %-12s %7d Gold%n",
+                System.out.printf("%-4d %-19s %-12s %-12s %7d Gold%n",
                         i + 1,
                         plant.getName(),
                         plant.getType(),
                         plant.getRarity(),
-                        plant.getSellPrice());
+                        plant.getSellPrice()
+                );
             }
 
-            System.out.println("------------------------------------------------------------------");
-            System.out.println("Total Harvested Plants: " + getPlantCount());
+            System.out.println("---------------------------------------------------------------------");
+            System.out.println("Total Plants: " + inventory.getPlantCount());
         }
 
-        System.out.println("\n==================================================");
+        waitForReturn(scanner);
+    }
+
+    private void displayItems(Scanner scanner, InventoryData inventory) {
+        System.out.println("\n---------------- ITEM INVENTORY ----------------");
+        System.out.printf("%-30s %10s%n", "Item", "Quantity");
+        System.out.println("-------------------------------------------------");
+
+        System.out.printf("%-30s %10d%n",
+                "Basic Speed Fertilizer",
+                inventory.getItemCount(FarmItem.BASIC_SPEED_FERTILIZER));
+
+        System.out.printf("%-30s %10d%n",
+                "Basic Quality Fertilizer",
+                inventory.getItemCount(FarmItem.BASIC_QUALITY_FERTILIZER));
+
+        System.out.println("-------------------------------------------------");
+
+        waitForReturn(scanner);
+    }
+
+    private void waitForReturn(Scanner scanner) {
+        System.out.print("\nPress ENTER to return to Inventory Menu...");
+        scanner.nextLine();
     }
 }

@@ -9,13 +9,10 @@ public class Main {
 
             //Initialize game objects
             Player player = new Player();
+            InventoryData inventoryData = new InventoryData();
             Inventory inventory = new Inventory();
             Shop shop = new Shop();
             
-            //initial starting inventory. remove lang ni if 0 seed start
-            inventory.addSeed(new BasicSeed());
-            inventory.addSeed(new BasicSeed());
-
             // To Test UI Elements
             int presentDay = 1;
             int plotSize = 4; //Initial starting plot size
@@ -27,7 +24,7 @@ public class Main {
             while (running) {
                 System.out.println("\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
                 System.out.printf("  Day: %d | Gold: %d | Plots: %d | Seeds: %d | Plants: %d",
-                        presentDay, player.getGold(), plotSize, inventory.getSeedCount(), inventory.getPlantCount());
+                        presentDay, player.getGold(), plotSize, inventoryData.getSeedCount(), inventoryData.getPlantCount());
                 System.out.println("\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n");
                 System.out.println("Commands: ");
                 System.out.println("(1) Manage Farm");
@@ -46,11 +43,11 @@ public class Main {
                         break;
                     case "2":
                         System.out.println("=> Option 2 selected: Visit Seed Shop");
-                        shop.openShop(scanner, player, inventory);
+                        shop.openShop(scanner, player, inventoryData);
                         break;
                     case "3":
                         System.out.println("=> Option 3 selected: View Inventory and Sell Plants");
-                        inventory.displayInventory();
+                        inventory.openInventory(scanner, inventoryData);
                         break;
                     case "4":
                         System.out.println("=> Option 4 selected: Expand Farm Plots");
