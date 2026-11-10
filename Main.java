@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -8,12 +6,19 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
             boolean running = true;
 
+
+            //Initialize game objects
+            Player player = new Player();
+            Inventory inventory = new Inventory();
+            Shop shop = new Shop();
+            
+            //initial starting inventory. remove lang ni if 0 seed start
+            inventory.addSeed(new BasicSeed());
+            inventory.addSeed(new BasicSeed());
+
             // To Test UI Elements
             int presentDay = 1;
-            int gold = 100;
             int plotSize = 4; //Initial starting plot size
-            int seedInventory = 2;
-            int plantInventory = 0;
 
             System.out.println("==================================================");
             System.out.println("                     Farm-IE                      ");
@@ -22,7 +27,7 @@ public class Main {
             while (running) {
                 System.out.println("\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
                 System.out.printf("  Day: %d | Gold: %d | Plots: %d | Seeds: %d | Plants: %d",
-                        presentDay, gold, plotSize, seedInventory, plantInventory);
+                        presentDay, player.getGold(), plotSize, inventory.getSeedCount(), inventory.getPlantCount());
                 System.out.println("\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n");
                 System.out.println("Commands: ");
                 System.out.println("(1) Manage Farm");
@@ -41,14 +46,15 @@ public class Main {
                         break;
                     case "2":
                         System.out.println("=> Option 2 selected: Visit Seed Shop");
+                        shop.openShop(scanner, player, inventory);
                         break;
                     case "3":
                         System.out.println("=> Option 3 selected: View Inventory and Sell Plants");
+                        inventory.displayInventory();
                         break;
                     case "4":
                         System.out.println("=> Option 4 selected: Expand Farm Plots");
                         plotSize++;
-                        gold -= 200; // Testing Gold Reduction
                         break;
                     case "5":
                         System.out.println("=> Option 5 selected: Advance to Next Day");

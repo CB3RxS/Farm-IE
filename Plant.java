@@ -8,7 +8,8 @@ public abstract class Plant implements Sellable {
         this.rarity = rarity;
         this.baseValue = baseValue;
     }
-    @Override 
+
+    @Override
     public String getName() {
         return name;
     }
@@ -21,7 +22,12 @@ public abstract class Plant implements Sellable {
         return baseValue;
     }
 
-    @Override 
+    // Returns the plant's category.
+    public String getType() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
     public int getSellPrice() {
         return getBaseValue() * rarity.getMultiplier();
     }
