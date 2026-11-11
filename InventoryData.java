@@ -57,7 +57,7 @@ public class InventoryData {
     }
 
     public List<Seed> getSeeds() {
-        return Collections.unmodifiableList(seeds);
+        return new ArrayList<>(seeds); // Updated to return a modifiable copy so that for Plot.java works.
     }
 
     // Harvested plant management
