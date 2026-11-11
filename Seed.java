@@ -4,12 +4,14 @@ public abstract class Seed implements Sellable {
     private final String name;
     private final int cost;
     private final int growthDays;
-    private final int rareChance;
-    private final int legendaryChance;
+    private final double rareChance;
+    private final double legendaryChance;
 
     private final Random random = new Random();
 
-    public Seed(String name, int cost, int growthDays, int rareChance, int legendaryChance) {
+    public Seed(String name, int cost, int growthDays,
+                int rareChance, int legendaryChance) {
+
         this.name = name;
         this.cost = cost;
         this.growthDays = growthDays;
@@ -17,7 +19,7 @@ public abstract class Seed implements Sellable {
         this.legendaryChance = legendaryChance;
     }
 
-    @Override 
+    @Override
     public String getName() {
         return name;
     }
@@ -30,33 +32,56 @@ public abstract class Seed implements Sellable {
         return growthDays;
     }
 
-    @Override 
+    @Override
     public int getSellPrice() {
         return cost / 2;
     }
 
     public Rarity rollRarity() {
-        int roll = random.nextInt(100) + 1;
+        return rollRarity(false);
+    }
 
-        if (roll <= legendaryChance) {
-            return Rarity.LEGENDARY;
-        } else if (roll <= legendaryChance + rareChance) {
-            return Rarity.RARE;
-        } else {
-            return Rarity.COMMON;
+    // Quality fertilizer increases higher rarity chances by 10%. The increase is deducted from the Common probability.
+    public Rarity rollRarity(boolean useQualityFertilizer) {
+        double rare = rareChance;
+        double legendary = legendaryChance;
+
+        if (useQualityFertilizer) {
+            rare += rareChance * 0.10;
+            legendary += legendaryChance * 0.10;
         }
+
+        double roll = random.nextDouble() * 100.0;
+
+        if (roll < legendary) {
+            return Rarity.LEGENDARY;
+        }
+
+        if (roll < legendary + rare) {
+            return Rarity.RARE;
+        }
+
+        return Rarity.COMMON;
     }
 
     public Plant createPlant() {
-        Rarity rarity = rollRarity();
+        return createPlant(false);
+    }
+
+    public Plant createPlant(boolean useQualityFertilizer) {
+        Rarity rarity = rollRarity(useQualityFertilizer);
+
+        // Randomly selects Flower, Vegetable, or Fruit.
         int type = random.nextInt(3);
 
         if (type == 0) {
             return new Flower(rarity);
-        } else if (type == 1) {
-            return new Vegetable(rarity);
-        } else {
-            return new Fruit(rarity);
         }
+
+        if (type == 1) {
+            return new Vegetable(rarity);
+        }
+
+        return new Fruit(rarity);
     }
 }
