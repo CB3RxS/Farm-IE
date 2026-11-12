@@ -1,8 +1,8 @@
 public enum FarmItem {
     BASIC_SPEED_FERTILIZER("Basic Speed Fertilizer", 40,
-            "Reduces this seed's growth duration by 10%. One per seed."),
+            "Reduces this plant's growth duration by 1 day. One per plant."),
     BASIC_QUALITY_FERTILIZER("Basic Quality Fertilizer", 50,
-            "Increases rare and legendary chances by 10% relative. One per seed.");
+            "Increases rare and legendary chances by 10% relative. One per plant.");
 
     private final String name;
     private final int cost;
@@ -26,5 +26,3 @@ public enum FarmItem {
         return description;
     }
 }
-
-//effects of items found in Seed.java
